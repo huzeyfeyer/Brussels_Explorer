@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+
+  #gegevens > div {
+    background: white;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  #zoek_optie {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  #gegevens div {
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .favoriete_knopje {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: grey;
+  }
+
+  .favoriete_knopje.actief {
+    color: red;
+  }
