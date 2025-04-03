@@ -17,7 +17,7 @@ const alleenFavorietenCheckbox = document.getElementById("toon-favorieten");
 // Favorieten ophalen uit localStorage
 let favorieten = JSON.parse(localStorage.getItem("favorieten")) || [];
 //om stripMuren globaal te maken
-let stripMuren = []; 
+let stripMuren = [];
 // Gegevens ophalen en tonen
 fetch(API_URL)
   .then(response => response.json())
@@ -50,7 +50,7 @@ fetch(API_URL)
             const id = (place.description || "onbekend") + " - " + (place.adresse || "onbekend");
         const isFavoriete = favorieten.includes(id);
 
-        // Favorieten Filter 
+     // Favorieten Filter
         if (alleenFavorietenCheckbox.checked && !isFavoriete) return;
  
       const div = document.createElement("div");
@@ -99,8 +99,7 @@ fetch(API_URL)
     const zoekterm = e.target.value.toLowerCase();
  
      // Filter de resultaten op basis van de beschrijving of adres
-     const gefilterd = plaatsen.filter(place => {
-        return (
+     const gefilterd = plaatsen.filter(place => 
           (place.description && place.description.toLowerCase().includes(zoekterm)) ||
           (place.adresse && place.adresse.toLowerCase().includes(zoekterm))
         );
@@ -123,7 +122,7 @@ fetch(API_URL)
     fetch(API_STRIP)
     .then(response => response.json())
     .then(data => {
-      const stripMuren = data.results;
+       stripMuren = data.results;
 
       function toonStripMuren(lijst) {
 
@@ -192,16 +191,8 @@ fetch(API_URL)
       });
 
       // Enkel favorieten filter
-      alleenFavorietenCheckbox.addEventListener("change", () => {
-        toonStripMuren(stripMuren);
+      alleenFavorietenCheckbox.addEventListener("change", () => 
+        toonStripMuren(stripMuren));
         gegevensFilter.addEventListener("change", () => toonStripMuren(stripMuren));
       });
-    });
-
   
-    })
- 
-  .catch(error => {
-    console.error("Error 404. Probeer opnieuw.", error);
-    document.getElementById("gegevens").innerText = "Kan gegevens niet laden.";
-  });
