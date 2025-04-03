@@ -65,15 +65,34 @@ Screenshots van de applicatie:
 
 - Taakverdeling
 
-	* Huzeyfe:
-		Opzetten van API-koppeling
-		Data ophalen en dynamisch tonen in de DOM
-		Zoekfunctie implementeren
-		Favorietenfunctie met localStorage
-	* Abdullah:
-		HTML en CSS structuur
-		Styling van zoekveld en kaarten
-		Dropdownmenu voor filtering (in ontwikkeling)
+# Abdullah:
+    - API Data ophalen en verwerken
+        Fetch aanvragen voor culturele locaties en stripmuren
+        Data omzetten naar JSON en verwerken
+        Foutafhandeling bij API-aanvragen
+    - Zoekfunctie implementeren
+        Input uitlezen
+        Gegevens filteren op zoektermen
+        Resultaten updaten in de DOM
+    - Sorteren en filteren van gegevens
+         Sorteerfunctie maken voor naam en postcode
+         Gegevens tonen op basis van filters (cultureel of stripmuren)
+
+# Huzeyfe:
+    - Favorieten beheren
+        Opslaan en verwijderen van favorieten in localStorage
+        Knoppen en iconen updaten bij interactie
+    - Thema (licht/donker) wisselen
+        Event listener voor knop
+        Thema opslaan in localStorage
+        Klassen toevoegen/verwijderen in de DOM
+    - Taalwissel functionaliteit
+        Opslaan en toepassen van taalkeuze
+        Herladen van de pagina bij wijziging
+    - Geolocatie en weergave
+        Huidige locatie ophalen via navigator.geolocation
+        Locatie opslaan in localStorage
+        Adresgegevens ophalen via OpenStreetMap API
 
 --- 
 
@@ -91,3 +110,108 @@ Screenshots van de applicatie:
 	index.html – basisstructuur van de webpagina
 	style.css – styling met focus op gebruiksvriendelijkheid
 	app.js – logica voor data ophalen, tonen, zoeken en favorieten
+
+
+
+## Technische vereisten
+
+// Culturele locaties API
+const API_URL = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_lieux_culturels/records?limit=100";
+const API_STRIP = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=20";
+
+// DOM-manipulatie: Elementen selecteren
+const container = document.getElementById("gegevens");
+const plaatsStripMuren = document.getElementById("stripmuren");
+const gegevensFilter = document.getElementById("gegevens_filter");
+const zoekInput = document.getElementById("zoek_optie");
+const sorteerSelect = document.getElementById("sorteer_optie");
+const alleenFavorietenCheckbox = document.getElementById("toon-favorieten");
+
+// Gebruik van LocalStorage: Favorieten opslaan en ophalen
+let favorieten = JSON.parse(localStorage.getItem("favorieten")) || [];
+let stripMuren = [];
+
+// Functie voor thema-wissel (DOM manipulatie + LocalStorage)
+function applyTheme(theme) {
+  document.body.classList.toggle("dark", theme === "dark");
+}
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);
+
+document.getElementById("theme-toggle").addEventListener("click", () => {
+  const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+  applyTheme(newTheme);
+  localStorage.setItem("theme", newTheme);
+});
+
+// Data ophalen (Fetch API + Promises)
+fetch(API_URL)
+  .then(response => response.json())
+  .then(data => {
+    const plaatsen = data.results;
+
+    // Array methodes: sorteren
+    function sorteerPlaatsen(lijst, optie) {
+      if (optie === "naam") {
+        lijst.sort((a, b) => (a.description || "").localeCompare(b.description || ""));
+      } else if (optie === "postcode") {
+        lijst.sort((a, b) => (a.code_postal || 0) - (b.code_postal || 0));
+      }
+    }
+
+    // Weergave van culturele plaatsen
+    function plaatsLijst(lijst) {
+      container.innerHTML = "";
+      sorteerPlaatsen(lijst, sorteerSelect.value);
+      
+      lijst.forEach(place => {
+        if (gegevensFilter.value !== "alle" && gegevensFilter.value !== "cultureel") return;
+        
+        const id = `${place.description || "onbekend"} - ${place.adresse || "onbekend"}`;
+        const isFavoriete = favorieten.includes(id);
+        
+        // Template literals voor HTML-output
+        const div = document.createElement("div");
+        div.classList.add("gegevens");
+        div.innerHTML = `
+          <h3>${place.description || "Geen info"}</h3>
+          <p><strong>Adres:</strong> ${place.adresse || "Geen info"}</p>
+          <p><strong>Postcode:</strong> ${place.code_postal || "Geen info"}</p>
+          <button class="favoriete_knopje ${isFavoriete ? "actief" : ""}" data-id="${id}">
+            <i class="${isFavoriete ? "fas" : "far"} fa-heart"></i>
+          </button>
+        `;
+
+        // Event listener op knop (callback function + DOM manipulatie)
+        div.querySelector(".favoriete_knopje").addEventListener("click", () => {
+          const icon = div.querySelector("i");
+          if (favorieten.includes(id)) {
+            favorieten = favorieten.filter(fav => fav !== id);
+            icon.className = "far fa-heart";
+          } else {
+            favorieten.push(id);
+            icon.className = "fas fa-heart";
+          }
+          localStorage.setItem("favorieten", JSON.stringify(favorieten));
+        });
+
+        container.appendChild(div);
+      });
+    }
+
+    plaatsLijst(plaatsen);
+  })
+  .catch(error => {
+    console.error("Error 404. Probeer opnieuw.", error);
+    container.innerText = "Kan gegevens niet laden.";
+  });
+
+// Observer API voorbeeld (voor toekomstige uitbreiding)
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      console.log("Element zichtbaar in viewport", entry.target);
+    }
+  });
+});
+document.querySelectorAll(".gegevens").forEach(el => observer.observe(el));
