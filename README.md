@@ -31,7 +31,25 @@ Screenshots van de applicatie:
 - Sorteeroptie toegevoegd (op naam & postcode)
 - Filter "Alleen favorieten tonen"
 
- ![Basisopmaak](./screenshots/SorteerOpties.png)
+Screenshots van de applicatie:
+
+ ![SorteerOpties](./screenshots/SorteerOpties.png)
+
+ Update 3 – Stripmuren Integratie
+
+- Tweede API toegevoegd: bruxelles_parcours_bd (stripmuren in Brussel)
+- Weergave van stripmuren als aparte kaarten met:
+- Titel van de muurschildering
+- Adres en gemeente
+- Tekenaar en jaar
+- Afbeelding van de muurschildering
+- Link naar de officiële site
+- Favorietenfunctionaliteit werkt ook voor stripmuren
+- Zoek optie werkt op beide datasets tegelijk
+
+Screenshots van de applicatie:
+
+![Stripmuur voorbeeld](./screenshots/stripmuur-kaart.png)
  
 ---
 
