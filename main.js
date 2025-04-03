@@ -3,6 +3,8 @@ const API_URL = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/
 // HTML_elementen
 const container = document.getElementById("gegevens");
 const zoekInput = document.getElementById("zoek_optie");
+const sorteerSelect = document.getElementById("sorteer_optie");
+const alleenFavorietenCheckbox = document.getElementById("toon-favorieten");
  
 // Favorieten ophalen uit localStorage
 let favorieten = JSON.parse(localStorage.getItem("favorieten")) || [];
@@ -12,16 +14,30 @@ fetch(API_URL)
   .then(response => response.json())
   .then(data => {
     const plaatsen = data.results;
+
+    function sorteerPlaatsen(lijst, optie) {
+      if (optie === "naam") {
+        lijst.sort((a, b) => (a.description || "").localeCompare(b.description || ""));
+      } else if (optie === "postcode") {
+        lijst.sort((a, b) => (a.code_postal || 0) - (b.code_postal || 0));
+      }
+    }
  
     // Een optie om plaatsen te tonen op het scherm
     function plaatsLijst(lijst) {
     // Nieuwe lege content maken
     container.innerHTML = "";
+
+      // Sorteerplaatsen
+    sorteerPlaatsen(lijst, sorteerSelect.value);
  
     lijst.forEach(place => {
             // is deze plaats favoriet?
             const id = (place.description || "onbekend") + " - " + (place.adresse || "onbekend");
         const isFavoriete = favorieten.includes(id);
+
+        // Favorieten Filter 
+        if (alleenFavorietenCheckbox.checked && !isFavoriete) return;
  
       const div = document.createElement("div");
       div.classList.add("plaats-card");
@@ -59,6 +75,7 @@ fetch(API_URL)
     });
  
 }
+  }
  
  
   // Een overzicht van alle plaatsen bij het laden van de pagina
@@ -75,11 +92,21 @@ fetch(API_URL)
           (place.adresse && place.adresse.toLowerCase().includes(zoekterm))
         );
       });
- 
-          // Toon de gefilterde resultaten
-          plaatsLijst(gefilterd);
-        });
-      })
+      plaatsLijst(gefilterd);
+
+    });
+      // Sorteeroptie verandert
+      sorteerSelect.addEventListener("change", () => {
+        plaatsLijst(plaatsen);
+      });
+
+
+        // Favorieten filter
+      alleenFavorietenCheckbox.addEventListener("change", () => {
+        plaatsLijst(plaatsen);
+      });
+
+    })
  
   .catch(error => {
     console.error("Error 404. Probeer opnieuw.", error);
