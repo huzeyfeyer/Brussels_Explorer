@@ -16,6 +16,19 @@
     <!-- De zoekbalkje --> 
   <input type="text" id="zoek_optie" placeholder="Zoek op naam of adres..." />
 
+  <!-- Sorteeroptie -->
+<select id="sorteer_optie">
+  <option value="default">Sorteer: Standaard</option>
+  <option value="naam">Sorteer op naam</option>
+  <option value="postcode">Sorteer op postcode</option>
+  </select>
+   
+  <!-- Alleen favorieten tonen -->
+  <label>
+  <input type="checkbox" id="toon-favorieten">
+    Alleen favorieten tonen
+  </label>
+
    <!-- Plekken voor data --> 
   <div id="resultaten">Gegevens worden geladen...</div>
 
