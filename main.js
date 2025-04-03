@@ -75,7 +75,6 @@ fetch(API_URL)
     });
  
 }
-  }
  
  
   // Een overzicht van alle plaatsen bij het laden van de pagina
