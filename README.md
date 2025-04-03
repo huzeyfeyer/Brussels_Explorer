@@ -18,13 +18,20 @@ Projectstatus
 
 - (done) Favorieten kunnen worden opgeslagen (❤️ button met localStorage)  
 
-- (nog niet) Sorteren en filtering zijn nog niet geïmplementeerd  
+- (done) Sorteren en filtering zijn nog niet geïmplementeerd  
 
 - (nog niet) Design nog niet geoptimaliseerd
 
 Screenshots van de applicatie:
 
-./screenshots/BasisOpmaak.png
+![Basisopmaak](./screenshots/BasisOpmaak.png)
+
+ Update 2 - Extra functionaliteiten
+ 
+- Sorteeroptie toegevoegd (op naam & postcode)
+- Filter "Alleen favorieten tonen"
+
+ ![Basisopmaak](./screenshots/SorteerOpties.png)
  
 ---
 
