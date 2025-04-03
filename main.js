@@ -9,14 +9,15 @@ const API_STRIP = "https://opendata.brussels.be/api/explore/v2.1/catalog/dataset
 const container = document.getElementById("gegevens");
 // Stripmuren plaatsen
 const plaatsStripMuren = document.getElementById("stripmuren");
-
+const gegevensFilter = document.getElementById("gegevens_filter");
 const zoekInput = document.getElementById("zoek_optie");
 const sorteerSelect = document.getElementById("sorteer_optie");
 const alleenFavorietenCheckbox = document.getElementById("toon-favorieten");
  
 // Favorieten ophalen uit localStorage
 let favorieten = JSON.parse(localStorage.getItem("favorieten")) || [];
- 
+//om stripMuren globaal te maken
+let stripMuren = []; 
 // Gegevens ophalen en tonen
 fetch(API_URL)
   .then(response => response.json())
@@ -41,6 +42,10 @@ fetch(API_URL)
     sorteerPlaatsen(lijst, sorteerSelect.value);
  
     lijst.forEach(place => {
+
+      // Filteren op basis van de geselecteerde gegevens
+      if (gegevensFilter.value !== "alle" && gegevensFilter.value !== "cultureel") return;
+
             // is deze plaats favoriet?
             const id = (place.description || "onbekend") + " - " + (place.adresse || "onbekend");
         const isFavoriete = favorieten.includes(id);
@@ -99,21 +104,20 @@ fetch(API_URL)
           (place.description && place.description.toLowerCase().includes(zoekterm)) ||
           (place.adresse && place.adresse.toLowerCase().includes(zoekterm))
         );
+        plaatsLijst(gefilterd);
       });
 
-      plaatsLijst(gefilterd);
+      sorteerSelect.addEventListener("change", () => plaatsLijst(plaatsen));
+      alleenFavorietenCheckbox.addEventListener("change", () => plaatsLijst(plaatsen));
+      gegevensFilter.addEventListener("change", () => plaatsLijst(plaatsen));
 
+    })
+
+    .catch(error => {
+      console.error("Error 404. Probeer opnieuw.", error);
+      document.getElementById("gegevens").innerText = "Kan gegevens niet laden.";
     });
-      // Sorteeroptie verandert
-      sorteerSelect.addEventListener("change", () => {
-        plaatsLijst(plaatsen);
-      });
-
-
-        // Favorieten filter
-      alleenFavorietenCheckbox.addEventListener("change", () => {
-        plaatsLijst(plaatsen);
-      });
+     
 
       // Stripmuren gegevens ophalen en tonen
     fetch(API_STRIP)
@@ -127,13 +131,16 @@ fetch(API_URL)
         plaatsStripMuren.innerHTML = "";
 
         lijst.forEach(mural => {
+          // Filteren op basis van de geselecteerde gegevens
+          if (gegevensFilter.value !== "alle" && gegevensFilter.value !== "strip") return;
+
           const id = mural.nom_de_la_fresque + " - " + mural.adresse;
           const isFavoriete = favorieten.includes(id);
 
           if (alleenFavorietenCheckbox.checked && !isFavoriete) return;
 
           const div = document.createElement("div");
-          div.classList.add("stripmuren-card");
+          div.classList.add("stripmuren");
 
           div.innerHTML = `
             <h3>${mural.nom_de_la_fresque || "Geen info"}</h3>
@@ -174,10 +181,11 @@ fetch(API_URL)
       // Zoekfunctie voor stripmuren
       zoekInput.addEventListener("input", (e) => {
         const zoekterm = e.target.value.toLowerCase();
-
         const gefilterd = stripMuren.filter(mural =>
           (mural.nom_de_la_fresque && mural.nom_de_la_fresque.toLowerCase().includes(zoekterm)) ||
-          (mural.adresse && mural.adresse.toLowerCase().includes(zoekterm))
+          (mural.adresse && mural.adresse.toLowerCase().includes(zoekterm)) ||
+          (mural.dessinateur && mural.dessinateur.toLowerCase().includes(zoekterm)) ||
+          (mural.date && mural.date.toString().includes(zoekterm))
         );
 
         toonStripMuren(gefilterd);
@@ -186,6 +194,7 @@ fetch(API_URL)
       // Enkel favorieten filter
       alleenFavorietenCheckbox.addEventListener("change", () => {
         toonStripMuren(stripMuren);
+        gegevensFilter.addEventListener("change", () => toonStripMuren(stripMuren));
       });
     });
 
