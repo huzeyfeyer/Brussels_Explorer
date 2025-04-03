@@ -50,6 +50,16 @@ Screenshots van de applicatie:
 Screenshots van de applicatie:
 
 ![Stripmuur voorbeeld](./screenshots/stripmuur-kaart.png)
+
+Update 4 – Geavanceerde zoek en filter Functionaliteit
+
+- Zoekoptie uitgebreid met tekenaar en jaar voor stripmuren
+- Filter op type: Culturele locaties, Stripmuren, of Alle
+-  Alle zoek, filter en sorteer functies werken
+
+Screenshots van de applicatie:
+
+![Filter](./screenshots/filtertoegevoegd.png)
  
 ---
 
