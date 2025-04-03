@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brussels Explorer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brussels Explorer</title>
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="design.css" />
 </head>
 <body>
-
+ 
+  <!-- Navigatiebalk -->
+  <div class="navbar">
+    <input type="text" id="zoek_optie" placeholder="Zoek op naam of adres..." />
     <h1>Brusselse Plaatselijke Culturen</h1>
-
-    <!-- Hier worden de gegevens afgedrukt -->
-    <div id="gegevens">Gegevens worden geladen...</div>
-
-    <!-- Stripmuren worden hier weergegeven -->
-    <h2>Stripmuren in Brussel</h2>
-    <div id="stripmuren">Gegevens worden geladen...</div>
-
-    <!-- De zoekbalkje --> 
-  <input type="text" id="zoek_optie" placeholder="Zoek op naam of adres..." />
-
-  <!-- Sorteeroptie -->
-<select id="sorteer_optie">
-  <option value="default">Sorteer: Standaard</option>
-  <option value="naam">Sorteer op naam</option>
-  <option value="postcode">Sorteer op postcode</option>
-  </select>
-   
-  <!-- Filter optie -->
-  <select id="gegevens_filter">
-    <option value="alle">Toon alles</option>
-    <option value="cultureel">Culturele Plaatsen</option>
-    <option value="strip">Stripmuren</option>
+  </div>
+ 
+  <!-- Filters -->
+  <div class="filters">
+    <select id="sorteer_optie">
+      <option value="default">Sorteer: Standaard</option>
+      <option value="naam">Sorteer op naam</option>
+      <option value="postcode">Sorteer op postcode</option>
     </select>
-    
-  <!-- Alleen favorieten tonen -->
-  <label>
-  <input type="checkbox" id="toon-favorieten">
-    Alleen favorieten tonen
-  </label>
-
-   
-
-    <script src="main.js"></script>
-
+ 
+    <select id="gegevens_filter">
+      <option value="alle">Toon alles</option>
+      <option value="cultureel">Culturele Plaatsen</option>
+      <option value="strip">Stripmuren</option>
+    </select>
+ 
+    <label>
+      <input type="checkbox" id="toon-favorieten" />
+      Alleen favorieten tonen
+    </label>
+  </div>
+ 
+  <!-- Content containers -->
+  <div class="container">
+    <h2>Culturele Plaatsen</h2>
+    <div id="gegevens" class="grid"></div>
+ 
+    <h2>Stripmuren in Brussel</h2>
+    <div id="stripmuren" class="grid"></div>
+  </div>
+ 
+  <script src="main.js"></script>
 </body>
 </html>
